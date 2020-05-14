@@ -1,5 +1,6 @@
 from django.shortcuts import render
 import datetime
+from .models import ProductCategory, Products
 
 # Create your views here.
 
@@ -7,31 +8,57 @@ import datetime
 def main(request):
     title = "Главная"
     visit_date = datetime.datetime.now()
-    content = {"title": title, "visit_date": visit_date}
+    products = Products.objects.all()[:4]
+    content = {"title": title, "visit_date": visit_date, 'products': products}
+
     return render(request, 'mainapp/index.html', content)
 
 
 def products(request):
-    return render(request, 'mainapp/product-single.html')
+    title = "Страница товара"
+    content = {"title": title}
+    return render(request, 'mainapp/product-single.html', content)
 
 
 def contacts(request):
-    return render(request, 'mainapp/contact.html')
+    title = "Контактные данные"
+    content = {"title": title}
+    return render(request, 'mainapp/contact.html', content)
 
 
 def blogsingle(request):
-    return render(request, 'mainapp/blog-single.html')
+    title = "Запись в блоге"
+    content = {"title": title}
+    return render(request, 'mainapp/blog-single.html', content)
 
 
 def blog(request):
-    return render(request, 'mainapp/blog.html')
+    title = "Блог"
+    content = {"title": title}
+    return render(request, 'mainapp/blog.html', content)
 
 
 def cart(request):
-    return render(request, 'mainapp/cart.html')
+    title = "Корзина"
+    content = {"title": title}
+    return render(request, 'mainapp/cart.html', content)
+
+
+def shop(request):
+    title = "Каталог товаров"
+    content = {"title": title}
+    return render(request, 'mainapp/shop.html', content)
+
+
+def checkout(request):
+    title = "Хз как назвать"
+    content = {"title": title}
+    return render(request, 'mainapp/checkout.html', content)
 
 
 def about(request):
-    return render(request, 'mainapp/about.html')
+    title = "О нас"
+    content = {"title": title}
+    return render(request, 'mainapp/about.html', content)
 
 
