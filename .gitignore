@@ -112,5 +112,5 @@ crashlytics-build.properties
 .idea
 *.sqlite3
 /manage.py
-.bat
+*.bat
 .DS_Store
