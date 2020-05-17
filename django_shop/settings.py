@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'ckeditor',
     'django.contrib.staticfiles',
-    'mainapp.apps.MainappConfig'
+    'mainapp',
+    'authnapp',
 ]
 
 MIDDLEWARE = [
@@ -107,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'UTC'
 
@@ -128,6 +129,8 @@ STATICFILES_DIRS = (
 )
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+AUTH_USER_MODEL = 'authnapp.ShopUser'
 
 INTERNAL_IPS = ['127.0.0.1']
 

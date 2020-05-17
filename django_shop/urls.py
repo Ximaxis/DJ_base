@@ -19,10 +19,12 @@ from django.conf.urls.static import static
 from django.urls import path, include
 import mainapp.views as mainapp
 
+
 urlpatterns = [
     path('', include('mainapp.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('admin/', admin.site.urls),
+    path("auth/", include("authnapp.urls", namespace="auth")),
 ]
 
 if settings.DEBUG:

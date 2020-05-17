@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.conf import settings
 import datetime
 from .models import ProductCategory, Products
 
@@ -8,15 +9,22 @@ from .models import ProductCategory, Products
 def main(request):
     title = "Главная"
     visit_date = datetime.datetime.now()
-    products = Products.objects.all()[:4]
+    products = Products.objects.all()[:5]
     content = {"title": title, "visit_date": visit_date, 'products': products}
 
     return render(request, 'mainapp/index.html', content)
 
 
-def products(request):
+def products(request, slug):
     title = "Страница товара"
-    content = {"title": title}
+    same_products = Products.objects.all()
+    get_product = get_object_or_404(Products, slug=slug)
+    content = {
+        "title": title,
+        "same_products": same_products,
+        "media_url": settings.MEDIA_URL,
+        "get_product": get_product,
+    }
     return render(request, 'mainapp/product-single.html', content)
 
 
@@ -46,7 +54,8 @@ def cart(request):
 
 def shop(request):
     title = "Каталог товаров"
-    content = {"title": title}
+    products = Products.objects.all()
+    content = {"title": title, 'products': products}
     return render(request, 'mainapp/shop.html', content)
 
 

@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 
@@ -34,10 +35,14 @@ class Products(models.Model):
     photo = models.ImageField(upload_to="products_images", blank=True)
     price = models.DecimalField(verbose_name="цена продукта", max_digits=8, decimal_places=2, default=0)
 
+    def get_absolute_url(self):
+        return reverse('products', kwargs={"slug": self.slug})
+
     def __str__(self):
         return f"{self.title} ({self.category.name})"
 
     class Meta:
         ordering = ['-created_at']
+
 
 
