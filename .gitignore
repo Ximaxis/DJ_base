@@ -1,9 +1,5 @@
 ### Python template
 +Temp/
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
 
 # C extensions
 *.so
@@ -111,6 +107,5 @@ crashlytics-build.properties
 *.pyc
 .idea
 *.sqlite3
-/manage.py
 *.bat
 .DS_Store

@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.conf import settings
 import datetime
 from .models import ProductCategory, Products
+from basketapp.models import Basket
 
 # Create your views here.
 
@@ -19,11 +20,15 @@ def products(request, slug):
     title = "Страница товара"
     same_products = Products.objects.all()
     get_product = get_object_or_404(Products, slug=slug)
+    basket = []
+    if request.user.is_authenticated:
+        basket = Basket.objects.filter(user=request.user)
     content = {
         "title": title,
         "same_products": same_products,
         "media_url": settings.MEDIA_URL,
         "get_product": get_product,
+        "basket": basket,
     }
     return render(request, 'mainapp/product-single.html', content)
 
@@ -46,16 +51,13 @@ def blog(request):
     return render(request, 'mainapp/blog.html', content)
 
 
-def cart(request):
-    title = "Корзина"
-    content = {"title": title}
-    return render(request, 'mainapp/cart.html', content)
-
-
 def shop(request):
     title = "Каталог товаров"
     products = Products.objects.all()
-    content = {"title": title, 'products': products}
+    basket = []
+    if request.user.is_authenticated:
+        basket = Basket.objects.filter(user=request.user)
+    content = {"title": title, 'products': products, 'basket': basket,}
     return render(request, 'mainapp/shop.html', content)
 
 

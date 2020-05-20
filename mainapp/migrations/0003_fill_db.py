@@ -28,7 +28,8 @@ def forwards_func(apps, schema_editor):
                 "they abused her for their.",
         created_at="2020-05-13T16:55:01.255Z",
         photo="products_images/product-1.jpg",
-        price=120.00
+        price=120.00,
+        quantity=10
     )
     pro_model.objects.create(
         pk=2,
@@ -45,7 +46,8 @@ def forwards_func(apps, schema_editor):
                 "they abused her for their.",
         created_at="2020-05-13T16:55:01.255Z",
         photo="products_images/product-2.jpg",
-        price=220.00
+        price=220.00,
+        quantity=10
     )
     pro_model.objects.create(
         pk=3,
@@ -62,7 +64,8 @@ def forwards_func(apps, schema_editor):
                 "they abused her for their.",
         created_at="2020-05-13T16:55:01.255Z",
         photo="products_images/product-3.jpg",
-        price=320.00
+        price=320.00,
+        quantity=10
     )
     pro_model.objects.create(
         pk=4,
@@ -79,7 +82,8 @@ def forwards_func(apps, schema_editor):
                 "they abused her for their.",
         created_at="2020-05-13T16:55:01.255Z",
         photo="products_images/product-4.jpg",
-        price=420.00
+        price=420.00,
+        quantity=10
     )
     pro_model.objects.create(
         pk=5,
@@ -96,7 +100,8 @@ def forwards_func(apps, schema_editor):
                 "they abused her for their.",
         created_at="2020-05-13T16:55:01.255Z",
         photo="products_images/product-5.jpg",
-        price=520.00
+        price=520.00,
+        quantity=40
     )
     pro_model.objects.create(
         pk=6,
@@ -113,7 +118,8 @@ def forwards_func(apps, schema_editor):
                 "they abused her for their.",
         created_at="2020-05-13T16:55:01.255Z",
         photo="products_images/product-6.jpg",
-        price=620.00
+        price=620.00,
+        quantity=15
     )
     pro_model.objects.create(
         pk=7,
@@ -130,7 +136,8 @@ def forwards_func(apps, schema_editor):
                 "they abused her for their.",
         created_at="2020-05-13T16:55:01.255Z",
         photo="products_images/product-7.jpg",
-        price=720.00
+        price=720.00,
+        quantity=60
     )
     del pro_cat_obj
     pro_cat_obj = pro_cat_model.objects.create(
@@ -153,7 +160,8 @@ def forwards_func(apps, schema_editor):
                 "they abused her for their.",
         created_at="2020-05-17T16:55:01.255Z",
         photo="products_images/product-8.jpg",
-        price=1930.00
+        price=1930.00,
+        quantity=11
     )
     del pro_cat_obj
 
@@ -166,7 +174,7 @@ def reverse_func(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('mainapp', '0001_initial'),
+        ('mainapp', '0002_products_quantity'),
     ]
 
     operations = [migrations.RunPython(forwards_func, reverse_func)]
