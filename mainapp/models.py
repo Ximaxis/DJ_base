@@ -34,7 +34,7 @@ class Products(models.Model):
     created_at = models.DateTimeField(verbose_name="дата добавления в каталог", auto_now_add=True)
     photo = models.ImageField(upload_to="products_images", blank=True)
     price = models.DecimalField(verbose_name="цена продукта", max_digits=8, decimal_places=2, default=0)
-    quantity = models.DecimalField(verbose_name="цена продукта", max_digits=5, decimal_places=0, default=0)
+    quantity = models.DecimalField(verbose_name="Продуктов в наличии", max_digits=5, decimal_places=0, default=0)
 
     def get_absolute_url(self):
         return reverse('products', kwargs={"slug": self.slug})

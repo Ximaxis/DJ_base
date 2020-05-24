@@ -11,7 +11,10 @@ def main(request):
     title = "Главная"
     visit_date = datetime.datetime.now()
     products = Products.objects.all()[:5]
-    content = {"title": title, "visit_date": visit_date, 'products': products}
+    basket = []
+    if request.user.is_authenticated:
+        basket = Basket.objects.filter(user=request.user)
+    content = {"title": title, "visit_date": visit_date, 'products': products, "basket": basket}
 
     return render(request, 'mainapp/index.html', content)
 
@@ -57,7 +60,7 @@ def shop(request):
     basket = []
     if request.user.is_authenticated:
         basket = Basket.objects.filter(user=request.user)
-    content = {"title": title, 'products': products, 'basket': basket,}
+    content = {"title": title, 'products': products, 'basket': basket}
     return render(request, 'mainapp/shop.html', content)
 
 

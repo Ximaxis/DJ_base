@@ -133,6 +133,10 @@ MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'authnapp.ShopUser'
 
+# Set login path:
+#   https://docs.djangoproject.com/en/2.2/ref/settings/#login-url
+LOGIN_URL = "authnapp:login"
+
 INTERNAL_IPS = ['127.0.0.1']
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
