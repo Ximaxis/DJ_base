@@ -24,7 +24,7 @@
     			</div>
     			<div class="col-lg-6 product-details pl-md-5 ftco-animate">
     				<h3>{{ get_product.title }}</h3>
-    				<p class="price"><span>{{ get_productt.price }}</span></p>
+    				<p class="price"><span>{{ get_product.price }} руб</span></p>
     				<p>{{ get_product.content }}</p>
 						<div class="row mt-4">
 							<div class="col-md-6">
@@ -55,7 +55,7 @@
 	             	</span>
 	          	</div>
           	</div>
-          	<p><a href="#" class="btn btn-primary py-3 px-5">Add to Cart</a></p>
+          	<p><a href="{% url 'basket:add' get_product.slug %}" class="btn btn-primary py-3 px-5">Add to Cart</a></p>
     			</div>
     		</div>
     	</div>
