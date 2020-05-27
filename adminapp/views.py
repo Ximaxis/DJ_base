@@ -25,7 +25,7 @@ def users(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def user_create(request):
-    title = "Users/создание"
+    title = "Users/Create"
 
     if request.method == "POST":
         user_form = ShopUserRegisterForm(request.POST, request.FILES)
@@ -42,7 +42,7 @@ def user_create(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def user_update(request, pk):
-    title = "Users/редактирование"
+    title = "Users/Edit"
 
     edit_user = get_object_or_404(ShopUser, pk=pk)
     if request.method == "POST":
@@ -86,7 +86,7 @@ def categories(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def category_create(request):
-    title = "Category/создание"
+    title = "Category/Create"
 
     if request.method == "POST":
         category_form = ProductCategoryEditForm(request.POST, request.FILES)
@@ -103,7 +103,7 @@ def category_create(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def category_update(request, slug):
-    title = "Category/редактирование"
+    title = "Category/Edit"
 
     edit_category = get_object_or_404(ProductCategory, slug=slug)
     if request.method == "POST":

@@ -3,6 +3,13 @@
 
 
 {% block content %}
+<section class="ftco-section ftco-cart">
+	<div class="container">
+	<button class="btn btn-round form-control last">
+    <a href="{% url 'my_admin:users' %}">
+        к списку пользователей
+    </a>
+</button>
 <form class="form-horizontal" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ update_form.as_p }}
@@ -13,4 +20,6 @@
         к списку пользователей
     </a>
 </button>
+</div>
+</section>
 {% endblock content %}

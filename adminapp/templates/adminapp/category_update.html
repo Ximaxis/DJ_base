@@ -3,7 +3,8 @@
 
 
 {% block content %}
-<div class="new_category_form">
+<section class="ftco-section ftco-cart">
+	<div class="container">
     <form class="form-horizontal" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ update_form.as_p }}
@@ -15,4 +16,5 @@
         </a>
     </button>
 </div>
+</section>
 {% endblock content %}
