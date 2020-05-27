@@ -23,7 +23,7 @@ import mainapp.views as mainapp
 urlpatterns = [
     path('', include('mainapp.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
-    path('admin/', admin.site.urls),
+    path('my_admin/', include("adminapp.urls", namespace="my_admin")),
     path('basket/', include("basketapp.urls", namespace="basket")),
     path("auth/", include("authnapp.urls", namespace="auth")),
 ]
@@ -31,6 +31,7 @@ urlpatterns = [
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns = [
+                      path('django_admin/', admin.site.urls),
                       path('__debug__/', include(debug_toolbar.urls)),
                   ] + urlpatterns
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

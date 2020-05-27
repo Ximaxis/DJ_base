@@ -9086,3 +9086,13 @@ textarea.form-control {
   100% {
     stroke-dasharray: 89, 200;
     stroke-dashoffset: -136px; } }
+
+.user_record.not_active {
+	opacity: 0.5;}
+
+.nav-item .active {
+	border-bottom: 2px solid #212121;}
+
+.edit:before {
+	content: "\f044";
+}
