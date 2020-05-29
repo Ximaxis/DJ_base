@@ -1,9 +1,13 @@
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import HttpResponseRedirect, get_object_or_404, redirect, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.list import ListView
 import datetime
-from adminapp.forms import ProductCategoryEditForm, ShopUserAdminEditForm
+from adminapp.forms import ProductCategoryEditForm, ProductEditForm, ShopUserAdminEditForm
 from authnapp.forms import ShopUserRegisterForm
 from authnapp.models import ShopUser
 from mainapp.models import Products, ProductCategory
@@ -13,6 +17,11 @@ from mainapp.models import Products, ProductCategory
 def admin_main(request):
     response = redirect("my_admin:users")
     return response
+
+
+class UsersListView(LoginRequiredMixin, ListView):
+    model = ShopUser
+    template_name = "adminapp/users.html"
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -84,55 +93,36 @@ def categories(request):
     return render(request, "adminapp/categories.html", content)
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def category_create(request):
-    title = "Category/Create"
-
-    if request.method == "POST":
-        category_form = ProductCategoryEditForm(request.POST, request.FILES)
-        if category_form.is_valid():
-            category_form.save()
-            return HttpResponseRedirect(reverse("my_admin:categories"))
-    else:
-        category_form = ProductCategoryEditForm()
-
-    content = {"title": title, "update_form": category_form, "media_url": settings.MEDIA_URL}
-
-    return render(request, "adminapp/category_update.html", content)
+class ProductCategoryCreateView(LoginRequiredMixin, CreateView):
+    model = ProductCategory
+    template_name = "adminapp/category_update.html"
+    success_url = reverse_lazy("my_admin:categories")
+    fields = "__all__"
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def category_update(request, slug):
-    title = "Category/Edit"
+class ProductCategoryUpdateView(LoginRequiredMixin, UpdateView):
+    model = ProductCategory
+    template_name = "adminapp/category_update.html"
+    success_url = reverse_lazy("my_admin:categories")
+    fields = "__all__"
+    foo = "bar"
 
-    edit_category = get_object_or_404(ProductCategory, slug=slug)
-    if request.method == "POST":
-        edit_form = ProductCategoryEditForm(request.POST, request.FILES, instance=edit_category)
-        if edit_form.is_valid():
-            edit_form.save()
-            return HttpResponseRedirect(reverse("my_admin:category_update", args=[edit_category.slug]))
-    else:
-        edit_form = ProductCategoryEditForm(instance=edit_category)
-
-    content = {"title": title, "update_form": edit_form, "media_url": settings.MEDIA_URL}
-
-    return render(request, "adminapp/category_update.html", content)
+    def get_context_data(self, **kwargs):
+        context = super(ProductCategoryUpdateView, self).get_context_data(**kwargs)
+        context["title"] = "Category/Edit"
+        return context
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def category_delete(request, slug):
-    title = "Category/Delete"
+class ProductCategoryDeleteView(LoginRequiredMixin, DeleteView):
+    model = ProductCategory
+    template_name = "adminapp/category_delete.html"
+    success_url = reverse_lazy("my_admin:categories")
 
-    category = get_object_or_404(ProductCategory, slug=slug)
-
-    if request.method == "POST":
-        category.is_active = False
-        category.save()
-        return HttpResponseRedirect(reverse("my_admin:categories"))
-
-    content = {"title": title, "category_to_delete": category, "media_url": settings.MEDIA_URL}
-
-    return render(request, "adminapp/category_delete.html", content)
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -144,21 +134,61 @@ def products(request, slug):
     return render(request, "adminapp/products.html", content)
 
 
+
+@user_passes_test(lambda u: u.is_superuser)
 def product_create(request, slug):
-    response = redirect("my_admin:categories")
-    return response
+    title = "Product/create"
+    category = get_object_or_404(ProductCategory, slug=slug)
+
+    if request.method == "POST":
+        product_form = ProductEditForm(request.POST, request.FILES)
+        if product_form.is_valid():
+            product_form.save()
+            return HttpResponseRedirect(reverse("my_admin:products", args=[slug]))
+    else:
+        # set initial value for form
+        product_form = ProductEditForm(initial={"category": category})
+
+    content = {"title": title, "update_form": product_form, "category": category, "media_url": settings.MEDIA_URL}
+    return render(request, "adminapp/product_update.html", content)
 
 
-def product_read(request, slug):
-    response = redirect("my_admin:categories")
-    return response
+class ProductDetailView(LoginRequiredMixin, DetailView):
+    model = Products
+    template_name = "adminapp/product_read.html"
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def product_update(request, slug):
-    response = redirect("my_admin:categories")
-    return response
+    title = "Product/update"
+    edit_product = get_object_or_404(Products, slug=slug)
+
+    if request.method == "POST":
+        edit_form = ProductEditForm(request.POST, request.FILES, instance=edit_product)
+        if edit_form.is_valid():
+            edit_form.save()
+            return HttpResponseRedirect(reverse("my_admin:product_update", args=[edit_product.slug]))
+    else:
+        edit_form = ProductEditForm(instance=edit_product)
+
+    content = {
+        "title": title,
+        "update_form": edit_form,
+        "category": edit_product.category,
+        "media_url": settings.MEDIA_URL,
+    }
+    return render(request, "adminapp/product_update.html", content)
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def product_delete(request, slug):
-    response = redirect("my_admin:categories")
-    return response
+    title = "Product/delete"
+    product = get_object_or_404(Products, slug=slug)
+
+    if request.method == "POST":
+        product.is_active = False
+        product.save()
+        return HttpResponseRedirect(reverse("my_admin:products", args=[product.category.slug]))
+
+    content = {"title": title, "product_to_delete": product, "media_url": settings.MEDIA_URL}
+    return render(request, "adminapp/product_delete.html", content)
