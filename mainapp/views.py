@@ -4,6 +4,7 @@ import datetime
 from .models import ProductCategory, Products
 from basketapp.models import Basket
 import random
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 # Create your views here.
 
@@ -75,13 +76,36 @@ def blog(request):
     return render(request, 'mainapp/blog.html', content)
 
 
-def shop(request):
+def shop(request, pk=0, page=1):
     title = "Каталог товаров"
-    products = Products.objects.all()
-    basket = []
-    if request.user.is_authenticated:
-        basket = Basket.objects.filter(user=request.user)
-    content = {"title": title, 'products': products, 'basket': basket}
+    links_menu = ProductCategory.objects.filter(is_active=True)
+    basket = get_basket(request.user)
+    if pk is not None:
+        if pk == 0:
+            category = {"pk": 0, "name": "все"}
+            products = Products.objects.filter(is_active=True).order_by("price")
+        else:
+            category = get_object_or_404(ProductCategory, pk=pk)
+            products = Products.objects.filter(category__pk=pk, is_active=True, category__is_active=True).order_by(
+                "price"
+            )
+        paginator = Paginator(products, 2)
+        try:
+            products_paginator = paginator.page(page)
+        except PageNotAnInteger:
+            products_paginator = paginator.page(1)
+        except EmptyPage:
+            products_paginator = paginator.page(paginator.num_pages)
+        content = {
+            "title": title,
+            "links_menu": links_menu,
+            "category": category,
+            "products": products_paginator,
+            "media_url": settings.MEDIA_URL,
+            "basket": basket,
+        }
+        return render(request, "mainapp/shop-list.html", content)
+    content = {"title": title, "links_menu": links_menu,  'basket': basket}
     return render(request, 'mainapp/shop.html', content)
 
 
